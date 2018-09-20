@@ -4,7 +4,7 @@ import WeatherChart from '../components/city-weather-screen/WeatherChart';
 import { Icon } from 'expo';
 
 import { connect } from 'react-redux';
-import { addFavorite } from '../actions';
+import { addFavorite, removeFav } from '../actions';
 
 import { getWeatherByCountry } from '../services/ApiService';
 
@@ -1404,7 +1404,8 @@ class CityWeathersScreen extends React.Component {
         this.state = {
             country: navigation.getParam('country', 'No country'),
             isLoading: false,
-            data: {}
+            data: {},
+            isInFav: (this.props.favState.favorites.find((item) => item === mydata.city.name + ', ' + mydata.city.country)) ? true : false
         }
     }
 
@@ -1415,16 +1416,15 @@ class CityWeathersScreen extends React.Component {
             });*/
     }
 
-    addCityToFavorites = () => {
-        this.props.addFavorite(mydata.city.name + ', ' + mydata.city.country);
-    }
-
-    getButtonText = () => {
-        const isInFavs = this.props.favState.favorites.find((item) => item === mydata.city.name + ', ' + mydata.city.country);
-        if (isInFavs) {
-            return 'Remove Favorite';
+    favoriteAction = (action) => {
+        if (action === 'add') {
+            this.props.addFavorite(mydata.city.name + ', ' + mydata.city.country);
+            this.setState({ isInFav: true })
+        } else {
+            console.log('remove');
+            this.props.removeFav(mydata.city.name + ', ' + mydata.city.country);
+            this.setState({ isInFav: false })
         }
-        return 'Add Favorite';
     }
 
     render() {
@@ -1439,8 +1439,8 @@ class CityWeathersScreen extends React.Component {
                 <View style={styles.container}>
                     <WeatherChart data={mydata} />
                     <Button 
-                        title={this.getButtonText()} 
-                        onPress={() => { this.addCityToFavorites() }}
+                        title={(this.state.isInFav) ? 'Remove Favorite' : 'Add Favorite'} 
+                        onPress={() => { (this.state.isInFav) ? this.favoriteAction('remove') : this.favoriteAction('add') }}
                     />
                 </View>
             )
@@ -1450,7 +1450,7 @@ class CityWeathersScreen extends React.Component {
 
 const mapStateToProps = ({ favState }) => ({ favState })
 
-export default connect(mapStateToProps, { addFavorite })(CityWeathersScreen)
+export default connect(mapStateToProps, { addFavorite, removeFav })(CityWeathersScreen)
 
 const styles = StyleSheet.create({
     container: {

@@ -14,8 +14,11 @@ export default (state = INITIAL_STATE, action) => {
                 favorites: [...state.favorites, action.payload]
             }
             break;
-        /*case REMOVE_FAV:
-            const fav = this.state.favorites.indexOf(action.payload)*/
+        case REMOVE_FAV:
+            return {
+                ...state,
+                favorites: state.favorites.filter(item => action.payload !== item)
+            }
         default:
             return state
     }
