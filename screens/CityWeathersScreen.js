@@ -1,6 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import WeatherChart from '../components/WeatherChart';
+import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
+import WeatherChart from '../components/city-weather-screen/WeatherChart';
+import { Icon } from 'expo';
+
+import { connect } from 'react-redux';
+import { addFavorite } from '../actions';
 
 import { getWeatherByCountry } from '../services/ApiService';
 
@@ -1388,11 +1392,11 @@ const mydata =
     }
 }
 
-export default class CountryWeathersScreen extends React.PureComponent {
+class CityWeathersScreen extends React.Component {
     static navigationOptions = {
         title: 'Weather',
     };
-    
+
     constructor(props) {
         super(props);
         const { navigation } = this.props;
@@ -1411,6 +1415,18 @@ export default class CountryWeathersScreen extends React.PureComponent {
             });*/
     }
 
+    addCityToFavorites = () => {
+        this.props.addFavorite(mydata.city.name + ', ' + mydata.city.country);
+    }
+
+    getButtonText = () => {
+        const isInFavs = this.props.favState.favorites.find((item) => item === mydata.city.name + ', ' + mydata.city.country);
+        if (isInFavs) {
+            return 'Remove Favorite';
+        }
+        return 'Add Favorite';
+    }
+
     render() {
         if (this.state.isLoading) {
             return (
@@ -1422,11 +1438,19 @@ export default class CountryWeathersScreen extends React.PureComponent {
             return (
                 <View style={styles.container}>
                     <WeatherChart data={mydata} />
+                    <Button 
+                        title={this.getButtonText()} 
+                        onPress={() => { this.addCityToFavorites() }}
+                    />
                 </View>
             )
         }
     }
 }
+
+const mapStateToProps = ({ favState }) => ({ favState })
+
+export default connect(mapStateToProps, { addFavorite })(CityWeathersScreen)
 
 const styles = StyleSheet.create({
     container: {

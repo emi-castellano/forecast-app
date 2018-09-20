@@ -1,18 +1,21 @@
 import {
-    ADD_FAV
+    ADD_FAV,
+    REMOVE_FAV
 } from '../actions/types'
 
 const INITIAL_STATE = {
     favorites: []
 }
 
-export default (state = INITIAL_STATE, action) => {    
+export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case ADD_FAV:
-        return {
-            moves: [...state.moves, action.payload]
-        }
-        break;
+            return {
+                favorites: [...state.favorites, action.payload]
+            }
+            break;
+        /*case REMOVE_FAV:
+            const fav = this.state.favorites.indexOf(action.payload)*/
         default:
             return state
     }

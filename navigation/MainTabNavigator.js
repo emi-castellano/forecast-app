@@ -4,11 +4,12 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import CountryWeathersScreen from '../screens/CountryWeather';
+import CityWeathersScreen from '../screens/CityWeathersScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
-  WeatherScreen: CountryWeathersScreen
+  WeatherScreen: CityWeathersScreen
 });
 
 HomeStack.navigationOptions = {
@@ -18,13 +19,32 @@ HomeStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? 'ios-home'
+          : 'md-home'
+      }
+    />
+  ),
+};
+
+const FavoritesStack = createStackNavigator({
+  Favorites: FavoritesScreen,
+});
+
+FavoritesStack.navigationOptions = {
+  tabBarLabel: 'Favorites',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-heart-${focused ? '' : '-empty'}`
+          : 'md-heart'
       }
     />
   ),
 };
 
 export default createBottomTabNavigator({
-  HomeStack
+  HomeStack,
+  FavoritesStack
 });

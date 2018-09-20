@@ -11,31 +11,42 @@ export default class WeatherChart extends React.Component {
         super(props);
 
         this.state = {
-            data: (this.props.data.cod !== '404') ? [this.props.data.list.map((item) => item.main.temp), this.props.data.list.map((item) => item.main.pressure), this.props.data.list.map((item) => item.main.humidity)] : [],
-            selectedValue: 0,
+            dataTempCelsius: this.props.data.list.map((item) => (item.main.temp)),
+            dataTempFahrenheit: this.props.data.list.map((item) => (item.main.temp - 32) * 5 / 9),
+            dataHum: this.props.data.list.map((item) => (item.main.humidity)),
+            dataPress: this.props.data.list.map((item) => (item.main.pressure)),
+            selectedValue: 'temp',
             unit: 'Celsius',
             xAxis: (this.props.data.cod !== '404') ? this.props.data.list.map((item) => item.dt_txt) : [],
             city: (this.props.data.cod !== '404') ? this.props.data.city.name : ''
         }
     }
 
+    getData = () => {
+        switch (this.state.selectedValue) {
+            case 'temp':
+                // Is fahrenheit
+                if (this.state.unit !== 'Celsius') {
+                    return this.state.dataTempFahrenheit
+                }
+                return this.state.dataTempCelsius
+            break;
+            case 'hum':
+                return this.state.dataHum
+            break;
+            case 'press':
+                return this.state.dataPress
+            break;
+        }
+    }
+
     changeTempUnit = (itemValue) => {
-        this.setState({ unit: itemValue }, () => {
-            const items = this.state.data
-            if (itemValue === 'Celsius') {
-                items[0] = this.state.data[0].map((item) => Math.round(item * 9 / 5 + 32))
-                this.setState({ data: items })
-            } else {
-                items[0] = this.state.data[0].map((item) => Math.round((item - 32) * 5 / 9))
-                this.setState({ data: items })
-            }
-        })
+        this.setState({ unit: itemValue });
     }
 
     render() {
         const axesSvg = { fontSize: 10, fill: 'grey' };
         const verticalContentInset = { top: 10, bottom: 10 }
-        const xAxisHeight = 30
 
         if (this.props.data.cod !== '404') {
             return (
@@ -45,11 +56,11 @@ export default class WeatherChart extends React.Component {
                     </View>
                     <Text>Pick the value to show:</Text>
                     <View style={styles.buttonsContainer}>
-                        <Button title="Temperature" onPress={() => { this.setState({ selectedValue: 0 }) }} />
-                        <Button title="Humidity" onPress={() => { this.setState({ selectedValue: 1 }) }} />
-                        <Button title="Pressure" onPress={() => { this.setState({ selectedValue: 2 }) }} />
+                        <Button title="Temperature" onPress={() => { this.setState({ selectedValue: 'temp' }) }} />
+                        <Button title="Humidity" onPress={() => { this.setState({ selectedValue: 'hum' }) }} />
+                        <Button title="Pressure" onPress={() => { this.setState({ selectedValue: 'press' }) }} />
                     </View>
-                    {this.state.selectedValue === 0 &&
+                    {this.state.selectedValue === 'temp' &&
                         <View>
                             <Text>Select the temp unit:</Text>
                             <Picker
@@ -63,7 +74,7 @@ export default class WeatherChart extends React.Component {
                     }
                     <ScrollView horizontal={true} style={styles.chartContainer}>
                         <YAxis
-                            data={this.state.data[this.state.selectedValue]}
+                            data={this.getData()}
                             style={styles.axis}
                             contentInset={verticalContentInset}
                             svg={axesSvg}
@@ -71,7 +82,7 @@ export default class WeatherChart extends React.Component {
                         <View style={{ flex: 1, width: this.state.xAxis.length * 50 }}>
                             <LineChart
                                 style={{ flex: 1 }}
-                                data={this.state.data[this.state.selectedValue]}
+                                data={this.getData()}
                                 contentInset={verticalContentInset}
                                 svg={{ stroke: 'rgb(255, 0, 0)' }}
                             >
