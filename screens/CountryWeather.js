@@ -1,9 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import WeatherChart from '../components/WeatherChart';
 
 import { getWeatherByCountry } from '../services/ApiService';
 
-export default class CountryWeathersScreen extends React.Component {
+export default class CountryWeathersScreen extends React.PureComponent {
     static navigationOptions = {
         title: 'Weather',
     };
@@ -14,16 +15,16 @@ export default class CountryWeathersScreen extends React.Component {
 
         this.state = {
             country: navigation.getParam('country', 'No country'),
-            isLoading: true,
+            isLoading: false,
             data: {}
         }
     }
 
     componentDidMount() {
-        getWeatherByCountry(this.state.country)
+        /*getWeatherByCountry(this.state.country)
             .then((res) => {
                 this.setState({data: res, isLoading: false});
-            });
+            });*/
     }
 
     render() {
@@ -35,9 +36,9 @@ export default class CountryWeathersScreen extends React.Component {
             );
         } else {
             return (
-                <ScrollView style={styles.container}>
-                    <Text>Clima pa + {this.state.country}</Text>
-                </ScrollView>
+                <View style={styles.container}>
+                    <WeatherChart />
+                </View>
             )
         }
     }
@@ -48,5 +49,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 15,
         backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 });

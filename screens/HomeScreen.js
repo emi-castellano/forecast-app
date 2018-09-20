@@ -46,7 +46,8 @@ export default class HomeScreen extends React.Component {
   }
 
   _handlePress = () => {
-    this.props.navigation.navigate('WeatherScreen', { country: this.state.keyword });
+    //this.props.navigation.navigate('WeatherScreen', { country: this.state.keyword });
+    this.props.navigation.navigate('WeatherScreen', { country: 'pepe' });
   };
 }
 
