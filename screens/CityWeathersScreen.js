@@ -6,27 +6,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addFavorite, removeFav } from '../actions';
 
-import { getWeatherByCountry } from '../services/ApiService';
+import { getWeatherByCity } from '../services/ApiService';
 
 class CityWeathersScreen extends React.Component {
     static navigationOptions = {
-        title: 'Weather',
+        title: 'Weather details',
     };
 
     constructor(props) {
         super(props);
-        const { navigation } = this.props;
+
+        const param = this.props.navigation.getParam('city', 'No city');
 
         this.state = {
-            country: navigation.getParam('country', 'No country'),
+            city: param,
             isLoading: true,
             data: {},
-            isInFav: (this.props.favState.favorites.find((item) => item === this.state.data.city.name + ', ' + this.state.data.city.country)) ? true : false
+            isInFav: (this.props.favState.favorites.find((item) => item === param)) !== undefined ? true : false
         }
     }
 
     componentDidMount() {
-        getWeatherByCountry(this.state.country)
+        getWeatherByCity(this.state.city)
             .then((res) => {
                 this.setState({ data: res, isLoading: false });
             });
@@ -34,10 +35,10 @@ class CityWeathersScreen extends React.Component {
 
     favoriteAction = (action) => {
         if (action === 'add') {
-            this.props.addFavorite(this.state.data.city.name + ', ' + this.state.data.city.country);
+            this.props.addFavorite(this.state.city);
             this.setState({ isInFav: true })
         } else {
-            this.props.removeFav(this.state.data.city.name + ', ' + this.state.data.city.country);
+            this.props.removeFav(this.state.city);
             this.setState({ isInFav: false })
         }
     }
@@ -57,6 +58,7 @@ class CityWeathersScreen extends React.Component {
                             <WeatherChart data={this.state.data} />
                             <View style={styles.buttonContainer}>
                                 <Button
+                                    color={(this.state.isInFav) ? 'red' : 'blue'}
                                     style={{ width: 100 }}
                                     title={(this.state.isInFav) ? 'Remove Favorite' : 'Add Favorite'}
                                     onPress={() => { (this.state.isInFav) ? this.favoriteAction('remove') : this.favoriteAction('add') }}

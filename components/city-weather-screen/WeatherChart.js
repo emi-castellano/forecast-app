@@ -73,6 +73,7 @@ export default class WeatherChart extends React.Component {
                     <YAxis
                         data={this.getData()}
                         style={styles.axis}
+                        numberOfTicks={ 10 }
                         contentInset={verticalContentInset}
                         svg={axesSvg}
                     />
@@ -88,6 +89,7 @@ export default class WeatherChart extends React.Component {
                         <XAxis
                             style={styles.axis}
                             data={this.state.xAxis}
+                            labelStyle={{transform:[{ rotateX: '45deg'}]}}
                             formatLabel={(value, index) => this.state.xAxis[index].split(' ')[1]}
                             contentInset={{ left: 20, right: 10 }}
                             svg={axesSvg}
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     axis: {
-        marginBottom: 30
+        marginBottom: 10
     },
     picker: {
         width: 150,

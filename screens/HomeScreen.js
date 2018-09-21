@@ -33,10 +33,10 @@ export default class HomeScreen extends React.Component {
           />
         </View>
         <View>
-          <Text>This app will allow you to see the forecast for a specific city. Enjoy it!</Text>
+          <Text>This app will allow you to see the forecast for a specific city. Enjoy it.</Text>
         </View>
         <View>
-          <TextInput style={styles.input} onChangeText={(keyword) => this.setState({keyword})} placeholder='Search by country...' />
+          <TextInput style={styles.input} onChangeText={(keyword) => this.setState({keyword})} placeholder='Search by city...' />
         </View>
         <View style={styles.sectionContainer}>
           <Button style={styles.button} onPress={() => {this.handlePress()}} title='Search' />
@@ -49,7 +49,7 @@ export default class HomeScreen extends React.Component {
     if (this.state.keyword === '') {
       alert("The input can't be blank.")
     } else {
-      this.props.navigation.navigate('WeatherScreen', { country: this.state.keyword });
+      this.props.navigation.navigate('WeatherScreen', { city: this.state.keyword });
     }
   };
 }

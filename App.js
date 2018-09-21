@@ -69,6 +69,7 @@ export default class App extends React.Component {
     this.setState({ isLoadingComplete: true });
   };
 }
+console.disableYellowBox = true;
 
 const styles = StyleSheet.create({
   container: {

@@ -5,24 +5,22 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { removeFav } from '../../actions';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class ListItem extends Component {
+
   constructor(props) {
     super(props);
-    this.state = {
-      imgUrl : 'http://www.fondear.org/infonautic/mar/El%20Cielo/Nubes_Color/nube01.jpg'
-    };
   }
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.item}>
           <Text style={styles.title}>{ this.props.city }</Text>
-          <Button title='Remove' onPress={() => { this.props.removeFav(this.props.city) }}/>
+          <Button color='red' title='Remove' onPress={() => { this.props.removeFav(this.props.city) }}/>
         </View>
-      </ScrollView>    
+      </View>    
     );
   }
 }
