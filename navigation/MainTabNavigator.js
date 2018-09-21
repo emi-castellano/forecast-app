@@ -27,7 +27,7 @@ HomeStack.navigationOptions = {
 };
 
 const FavoritesStack = createStackNavigator({
-  Favorites: FavoritesScreen,
+  Favorites: FavoritesScreen
 });
 
 FavoritesStack.navigationOptions = {

@@ -10,7 +10,7 @@ export default class WeatherChart extends React.Component {
 
         this.state = {
             dataTempCelsius: this.props.data.list.map((item) => (item.main.temp)),
-            dataTempFahrenheit: this.props.data.list.map((item) => (item.main.temp - 32) * 5 / 9),
+            dataTempFahrenheit: this.props.data.list.map((item) => item.main.temp * 9 / 5 + 32),
             dataHum: this.props.data.list.map((item) => (item.main.humidity)),
             dataPress: this.props.data.list.map((item) => (item.main.pressure)),
             selectedValue: 'TEMPERATURE',
