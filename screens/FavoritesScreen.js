@@ -10,10 +10,12 @@ import {
 import { connect } from 'react-redux'
 import ListItem from '../components/favorites-screen/ListItem'
 
+import PropTypes from 'prop-types';
+
 class FavoritesScreen extends React.Component {
 
   static navigationOptions = {
-    title: 'Favorites',
+    title: 'Favorites'
   };
 
   constructor(props) {
@@ -21,7 +23,6 @@ class FavoritesScreen extends React.Component {
   }
 
   render() {
-    console.log(this.props.favState.favorites)
     if (this.props.favState.favorites.length > 0) {
       return (
         <View style={styles.container}>
@@ -48,6 +49,10 @@ class FavoritesScreen extends React.Component {
 }
 
 const mapStateToProps = ({ favState }) => ({ favState })
+
+FavoritesScreen.propTypes = {
+  favState: PropTypes.object.isRequired
+}
 
 export default connect(mapStateToProps, null)(FavoritesScreen)
 

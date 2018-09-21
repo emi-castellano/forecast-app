@@ -4,9 +4,11 @@ import {
   TextInput,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  Button
 } from 'react-native';
+
+import PropTypes from 'prop-types';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -30,25 +32,30 @@ export default class HomeScreen extends React.Component {
             style={styles.logo}
           />
         </View>
-        <View style={styles.sectionContainer}>
-          <TextInput onChangeText={(keyword) => this.setState({keyword})} placeholder='Search by country...' />
+        <View>
+          <Text>This app will allow you to see the forecast for a specific city. Enjoy it!</Text>
+        </View>
+        <View>
+          <TextInput style={styles.input} onChangeText={(keyword) => this.setState({keyword})} placeholder='Search by country...' />
         </View>
         <View style={styles.sectionContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this._handlePress}
-          >
-            <Text> Search </Text>
-          </TouchableOpacity>
+          <Button style={styles.button} onPress={() => {this.handlePress()}} title='Search' />
         </View>
       </View>
     );
   }
 
-  _handlePress = () => {
-    //this.props.navigation.navigate('WeatherScreen', { country: this.state.keyword });
-    this.props.navigation.navigate('WeatherScreen', { country: 'pepe' });
+  handlePress = () => {
+    if (this.state.keyword === '') {
+      alert("The input can't be blank.")
+    } else {
+      this.props.navigation.navigate('WeatherScreen', { country: this.state.keyword });
+    }
   };
+}
+
+HomeScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
 }
 
 const styles = StyleSheet.create({
@@ -57,14 +64,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-evenly',
+    backgroundColor: '#fff'
   },
   sectionContainer: {
     width: 100,
     height: 50
   },
   logo: {
-    width: 50,
-    height: 40
+    width: 100,
+    height: 100
+  },
+  input: {
+    fontSize: 20,
+    width: 200,
+    paddingBottom: 10
   },
   button: {
     alignItems: 'center',

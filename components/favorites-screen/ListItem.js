@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
-import { getCityImage } from '../../services/ImageService'
+import { View, Text, StyleSheet, Button, Dimensions, ScrollView } from 'react-native';
+import PropTypes from 'prop-types';
+
+import { connect } from 'react-redux'
+import { removeFav } from '../../actions';
 
 const { width, height } = Dimensions.get('window');
 
-export default class ListItem extends Component {
+class ListItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,28 +15,25 @@ export default class ListItem extends Component {
     };
   }
 
-  /*componentWillMount(){
-      getCityImage(this.props.city.name).then((req)=>{
-        if(req.photos != undefined && req.photos[0].image.web != undefined){
-          this.setState({imgUrl:req.photos[0].image.web});
-        }
-      }).catch(
-        function(error) {
-          console.error(error);
-        }
-      );;
-  }*/
-
   render() {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.item}>
           <Text style={styles.title}>{ this.props.city }</Text>
+          <Button title='Remove' onPress={() => { this.props.removeFav(this.props.city) }}/>
         </View>
       </ScrollView>    
     );
   }
 }
+
+const mapStateToProps = ({ favState }) => ({ favState })
+
+ListItem.propTypes = {
+  city: PropTypes.string.isRequired
+}
+
+export default connect(mapStateToProps, { removeFav })(ListItem)
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     borderBottomColor: '#c3c3c3',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    justifyContent: 'space-between'
   },
   title:{
     fontSize: 18,

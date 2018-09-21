@@ -1,9 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, Button, Text, Dimensions, Picker } from 'react-native';
 import { Grid, LineChart, XAxis, YAxis } from 'react-native-svg-charts';
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+import PropTypes from 'prop-types';
 
 export default class WeatherChart extends React.Component {
 
@@ -15,28 +13,28 @@ export default class WeatherChart extends React.Component {
             dataTempFahrenheit: this.props.data.list.map((item) => (item.main.temp - 32) * 5 / 9),
             dataHum: this.props.data.list.map((item) => (item.main.humidity)),
             dataPress: this.props.data.list.map((item) => (item.main.pressure)),
-            selectedValue: 'temp',
+            selectedValue: 'TEMPERATURE',
             unit: 'Celsius',
-            xAxis: (this.props.data.cod !== '404') ? this.props.data.list.map((item) => item.dt_txt) : [],
-            city: (this.props.data.cod !== '404') ? this.props.data.city.name : ''
+            xAxis: this.props.data.list.map((item) => item.dt_txt),
+            city: this.props.data.city.name
         }
     }
 
     getData = () => {
         switch (this.state.selectedValue) {
-            case 'temp':
+            case 'TEMPERATURE':
                 // Is fahrenheit
                 if (this.state.unit !== 'Celsius') {
                     return this.state.dataTempFahrenheit
                 }
                 return this.state.dataTempCelsius
-            break;
-            case 'hum':
+                break;
+            case 'HUMIDITY':
                 return this.state.dataHum
-            break;
-            case 'press':
+                break;
+            case 'PRESSURE':
                 return this.state.dataPress
-            break;
+                break;
         }
     }
 
@@ -48,65 +46,61 @@ export default class WeatherChart extends React.Component {
         const axesSvg = { fontSize: 10, fill: 'grey' };
         const verticalContentInset = { top: 10, bottom: 10 }
 
-        if (this.props.data.cod !== '404') {
-            return (
-                <ScrollView style={styles.container}>
+        return (
+            <View style={styles.container}>
+                <View>
+                    <Text style={styles.title}>City: {this.state.city}</Text>
+                </View>
+                <Text>Showing {this.state.selectedValue}</Text>
+                <View style={styles.buttonsContainer}>
+                    <Button color="green" title="Temperature" onPress={() => { this.setState({ selectedValue: 'TEMPERATURE' }) }} />
+                    <Button color="green" title="Humidity" onPress={() => { this.setState({ selectedValue: 'HUMIDITY' }) }} />
+                    <Button color="green" title="Pressure" onPress={() => { this.setState({ selectedValue: 'PRESSURE' }) }} />
+                </View>
+                {this.state.selectedValue === 'TEMPERATURE' &&
                     <View>
-                        <Text style={styles.title}>This is the forecast for { this.state.city }</Text>
+                        <Text>Select the temp unit:</Text>
+                        <Picker
+                            selectedValue={this.state.unit}
+                            style={styles.picker}
+                            onValueChange={(itemValue, itemIndex) => this.changeTempUnit(itemValue)}>
+                            <Picker.Item label="Celsius" value="Celsius" />
+                            <Picker.Item label="Fahrenheit" value="Fahrenheit" />
+                        </Picker>
                     </View>
-                    <Text>Pick the value to show:</Text>
-                    <View style={styles.buttonsContainer}>
-                        <Button title="Temperature" onPress={() => { this.setState({ selectedValue: 'temp' }) }} />
-                        <Button title="Humidity" onPress={() => { this.setState({ selectedValue: 'hum' }) }} />
-                        <Button title="Pressure" onPress={() => { this.setState({ selectedValue: 'press' }) }} />
-                    </View>
-                    {this.state.selectedValue === 'temp' &&
-                        <View>
-                            <Text>Select the temp unit:</Text>
-                            <Picker
-                                selectedValue={this.state.unit}
-                                style={styles.picker}
-                                onValueChange={(itemValue, itemIndex) => this.changeTempUnit(itemValue)}>
-                                <Picker.Item label="Celsius" value="Celsius" />
-                                <Picker.Item label="Fahrenheit" value="Fahrenheit" />
-                            </Picker>
-                        </View>
-                    }
-                    <ScrollView horizontal={true} style={styles.chartContainer}>
-                        <YAxis
+                }
+                <ScrollView horizontal={true} style={styles.chartContainer}>
+                    <YAxis
+                        data={this.getData()}
+                        style={styles.axis}
+                        contentInset={verticalContentInset}
+                        svg={axesSvg}
+                    />
+                    <View style={{ flex: 1, width: this.state.xAxis.length * 50 }}>
+                        <LineChart
+                            style={{ flex: 1 }}
                             data={this.getData()}
-                            style={styles.axis}
                             contentInset={verticalContentInset}
+                            svg={{ stroke: 'rgb(255, 0, 0)' }}
+                        >
+                            <Grid />
+                        </LineChart>
+                        <XAxis
+                            style={styles.axis}
+                            data={this.state.xAxis}
+                            formatLabel={(value, index) => this.state.xAxis[index].split(' ')[1]}
+                            contentInset={{ left: 20, right: 10 }}
                             svg={axesSvg}
                         />
-                        <View style={{ flex: 1, width: this.state.xAxis.length * 50 }}>
-                            <LineChart
-                                style={{ flex: 1 }}
-                                data={this.getData()}
-                                contentInset={verticalContentInset}
-                                svg={{ stroke: 'rgb(255, 0, 0)' }}
-                            >
-                                <Grid />
-                            </LineChart>
-                            <XAxis
-                                style={styles.axis}
-                                data={this.state.xAxis}
-                                formatLabel={(value, index) => this.state.xAxis[index].split(' ')[1]}
-                                contentInset={{ left: 20, right: 10 }}
-                                svg={axesSvg}
-                            />
-                        </View>
-                    </ScrollView>
+                    </View>
                 </ScrollView>
-            )
-        } else {
-            return (
-                <View>
-                    <Text>We didn't find information about your search.</Text>
-                </View>
-            )
-        }
+            </View>
+        )
     }
+}
+
+WeatherChart.propTypes = {
+    data: PropTypes.object.isRequired
 }
 
 const styles = StyleSheet.create({
@@ -127,7 +121,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     axis: {
-         marginBottom: 30
+        marginBottom: 30
     },
     picker: {
         width: 150,
