@@ -18,7 +18,7 @@ class ListItem extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.item}>
-          <Text style={styles.title}>{ this.props.city }</Text>
+          <Text onPress={this.props.goToFav} style={styles.title}>{ this.props.city }</Text>
           <Button color='red' title='Remove' onPress={() => { this.props.removeFav(this.props.city) }}/>
         </View>
       </View>    
