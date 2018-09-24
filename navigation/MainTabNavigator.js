@@ -27,7 +27,8 @@ HomeStack.navigationOptions = {
 };
 
 const FavoritesStack = createStackNavigator({
-  Favorites: FavoritesScreen
+  Favorites: FavoritesScreen,
+  WeatherScreen: CityWeathersScreen
 });
 
 FavoritesStack.navigationOptions = {
