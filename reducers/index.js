@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux'
 
-import FavoriteReducer from './FavoritesReducer'
+import favoriteReducer from './FavoritesReducer'
+import forecastReducer from './ForecastReducer'
 
 export default combineReducers({
-    favState: FavoriteReducer    
+    favState: favoriteReducer,
+    dataForecast: forecastReducer
 })

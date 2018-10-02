@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addFavorite, removeFav } from '../actions';
 
-import { getWeatherByCity } from '../services/ApiService';
+import { FORECAST_FETCH } from '../actions/types'
 
 class CityWeathersScreen extends React.Component {
     static navigationOptions = {
@@ -22,18 +22,15 @@ class CityWeathersScreen extends React.Component {
             city: param,
             isLoading: true,
             data: {},
-            isInFav: (this.props.favState.favorites.find((item) => item === param)) !== undefined ? true : false
+            //isInFav: (this.props.favState.favorites.find((item) => item === param)) !== undefined ? true : false
         }
     }
 
     componentDidMount() {
-        getWeatherByCity(this.state.city)
-            .then((res) => {
-                this.setState({ data: res, isLoading: false });
-            });
+        this.props.onFetchForecast(this.state.city)
     }
 
-    favoriteAction = (action) => {
+    /*favoriteAction = (action) => {
         if (action === 'add') {
             this.props.addFavorite(this.state.city);
             this.setState({ isInFav: true })
@@ -41,53 +38,56 @@ class CityWeathersScreen extends React.Component {
             this.props.removeFav(this.state.city);
             this.setState({ isInFav: false })
         }
-    }
+    }*/
 
     render() {
-        if (this.state.isLoading) {
+        if (this.props.fetchState.isLoading) {
             return (
                 <View style={styles.container}>
-                    <Text>Loading...</Text>
+                    <Text>Fetching data...</Text>
                 </View>
-            );
+            )
         } else {
-            if (this.state.data.cod === '200') {
+            if (this.props.fetchState.forecast) {
                 return (
                     <View style={styles.container}>
                         <ScrollView>
-                            <WeatherChart data={this.state.data} />
-                            <View style={styles.buttonContainer}>
-                                <Button
-                                    color={(this.state.isInFav) ? 'red' : 'blue'}
-                                    style={{ width: 100 }}
-                                    title={(this.state.isInFav) ? 'Remove Favorite' : 'Add Favorite'}
-                                    onPress={() => { (this.state.isInFav) ? this.favoriteAction('remove') : this.favoriteAction('add') }}
-                                />
-                            </View>
+                            <WeatherChart data={this.props.fetchState.forecast} />
+
                         </ScrollView>
                     </View >
                 )
             } else {
                 return (
-                    <View style={styles.container}>
-                        <Text>No results found for {this.state.country}</Text>
-                    </View>
+                    <Text>An error has ocurred while fetching data.</Text>
                 )
             }
         }
     }
 }
 
-const mapStateToProps = ({ favState }) => ({ favState })
-
-CityWeathersScreen.propTypes = {
-    addFavorite: PropTypes.func.isRequired,
-    removeFav: PropTypes.func.isRequired,
-    navigation: PropTypes.object.isRequired,
-    favState: PropTypes.object.isRequired
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onFetchForecast: async (city) => {
+            return dispatch({ type: FORECAST_FETCH, payload: city })
+        }
+    }
 }
 
-export default connect(mapStateToProps, { addFavorite, removeFav })(CityWeathersScreen)
+const mapStateToProps = (state) => {
+    return {
+        fetchState: state.dataForecast
+    }
+}
+
+CityWeathersScreen.propTypes = {
+    /*addFavorite: PropTypes.func.isRequired,
+    removeFav: PropTypes.func.isRequired,
+    navigation: PropTypes.object.isRequired,
+    favState: PropTypes.object.isRequired*/
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CityWeathersScreen)
 
 const styles = StyleSheet.create({
     container: {

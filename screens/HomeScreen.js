@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Button
+  Button,
+  NetInfo
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -23,6 +24,22 @@ export default class HomeScreen extends React.Component {
     }
   }
 
+  handlePress = () => {
+    if (this.state.keyword === '') {
+      alert("The input can't be blank.")
+    } else {
+      this.props.navigation.navigate('WeatherScreen', { city: this.state.keyword });
+    }
+  };
+
+  handleConnectivityChange = (isConnected) => {
+    console.log(isConnected)
+  }
+
+  componentDidMount() {
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -36,22 +53,14 @@ export default class HomeScreen extends React.Component {
           <Text>This app will allow you to see the forecast for a specific city. Enjoy it.</Text>
         </View>
         <View>
-          <TextInput style={styles.input} onChangeText={(keyword) => this.setState({keyword})} placeholder='Search by city...' />
+          <TextInput style={styles.input} onChangeText={(keyword) => this.setState({ keyword })} placeholder='Search by city...' />
         </View>
         <View style={styles.sectionContainer}>
-          <Button style={styles.button} onPress={() => {this.handlePress()}} title='Search' />
+          <Button style={styles.button} onPress={() => { this.handlePress() }} title='Search' />
         </View>
       </View>
     );
   }
-
-  handlePress = () => {
-    if (this.state.keyword === '') {
-      alert("The input can't be blank.")
-    } else {
-      this.props.navigation.navigate('WeatherScreen', { city: this.state.keyword });
-    }
-  };
 }
 
 HomeScreen.propTypes = {

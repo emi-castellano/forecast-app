@@ -4,18 +4,7 @@ import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk';
-
-import reducers from './reducers'
-
-const middleware = [thunk];
-const store = createStore(
-  reducers,
-  compose(
-    applyMiddleware(...middleware)
-  )
-);
+import store from './store';
 
 export default class App extends React.Component {
   state = {
