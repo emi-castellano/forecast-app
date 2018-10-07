@@ -1,10 +1,22 @@
-import React from 'react';
-import { createSwitchNavigator } from 'react-navigation';
+import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 
-import MainTabNavigator from './MainTabNavigator';
+import HomeScreen from '../screens/HomeScreen'
+import FavoritesScreen from '../screens/FavoritesScreen'
+import SignInScreen from '../screens/SignInScreen'
+import SignUpScreen from '../screens/SignUpScreen'
+import CityWeathersScreen from '../screens/CityWeathersScreen'
+import AuthCheckScreen from '../screens/AuthCheckScreen'
 
-export default createSwitchNavigator({
-  // You could add another route here for authentication.
-  // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-  Main: MainTabNavigator,
-});
+const SignedInStack = createStackNavigator({ Home: HomeScreen, Favorites: FavoritesScreen, Forecast: CityWeathersScreen })
+const SignedOutStack = createStackNavigator({ SignIn: SignInScreen, SignUp: SignUpScreen })
+
+export default createSwitchNavigator(
+  {
+    AuthCheck: AuthCheckScreen,
+    SignedIn: SignedInStack,
+    SignedOut: SignedOutStack
+  },
+  {
+    initialRouteName: 'AuthCheck',
+  }
+);

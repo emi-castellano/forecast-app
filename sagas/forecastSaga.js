@@ -25,5 +25,4 @@ export function* getForecastData(payload) {
 export function* forecastFetchWatcher() {
   const { payload } = yield takeLatest(FORECAST_FETCH, getForecastData);
   yield fork(getForecastData, payload)
-
 }

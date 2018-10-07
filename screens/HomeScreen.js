@@ -28,7 +28,7 @@ export default class HomeScreen extends React.Component {
     if (this.state.keyword === '') {
       alert("The input can't be blank.")
     } else {
-      this.props.navigation.navigate('WeatherScreen', { city: this.state.keyword });
+      this.props.navigation.navigate('Forecast', { city: this.state.keyword });
     }
   };
 

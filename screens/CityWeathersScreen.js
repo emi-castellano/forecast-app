@@ -4,7 +4,6 @@ import WeatherChart from '../components/city-weather-screen/WeatherChart';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import { addFavorite, removeFav } from '../actions';
 
 import { FORECAST_FETCH } from '../actions/types'
 
@@ -22,7 +21,7 @@ class CityWeathersScreen extends React.Component {
             city: param,
             isLoading: true,
             data: {},
-            //isInFav: (this.props.favState.favorites.find((item) => item === param)) !== undefined ? true : false
+            isInFav: (this.props.favState.favorites.find((item) => item === param)) !== undefined ? true : false
         }
     }
 
@@ -30,17 +29,21 @@ class CityWeathersScreen extends React.Component {
         this.props.onFetchForecast(this.state.city)
     }
 
-    /*favoriteAction = (action) => {
+    favoriteAction = (action) => {
         if (action === 'add') {
-            this.props.addFavorite(this.state.city);
+            this.addFavorite(this.state.city);
             this.setState({ isInFav: true })
         } else {
-            this.props.removeFav(this.state.city);
+            this.removeFav(this.state.city);
             this.setState({ isInFav: false })
         }
-    }*/
+    }
 
     render() {
+        const isInFav = (this.props.favState.favorites.find((item) => item === this.state.city)) !== undefined ? true : false
+        const favBtnColor = (isInFav) ? 'red' : 'blue'
+        const favBtnTitle = (isInFav) ? 'Remove Favorite' : 'Add Favorite'
+
         if (this.props.fetchState.isLoading) {
             return (
                 <View style={styles.container}>
@@ -53,7 +56,14 @@ class CityWeathersScreen extends React.Component {
                     <View style={styles.container}>
                         <ScrollView>
                             <WeatherChart data={this.props.fetchState.forecast} />
-
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                    color={favBtnColor}
+                                    style={{ width: 100 }}
+                                    title={favBtnTitle}
+                                    onPress={() => { (isInFav) ? this.favoriteAction('remove') : this.favoriteAction('add') }}
+                                />
+                            </View>
                         </ScrollView>
                     </View >
                 )
@@ -76,7 +86,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        fetchState: state.dataForecast
+        fetchState: state.dataForecast,
+        favState: state.favState
     }
 }
 
