@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingBottom: 10,
     borderBottomWidth: 1,
+    color: whiteColor,
     borderBottomColor: whiteColor
   },
   haveAccount: {

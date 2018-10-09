@@ -6,7 +6,8 @@ import {
   Text,
   View,
   NetInfo,
-  TouchableHighlight
+  TouchableHighlight,
+  KeyboardAvoidingView
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -45,7 +46,7 @@ import { defaultColor, whiteColor } from '../constants/Colors'
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.sectionContainer}>
+        <View>
           <Image
             source={require('../assets/images/icon.png')}
             style={styles.logo}
@@ -57,13 +58,13 @@ import { defaultColor, whiteColor } from '../constants/Colors'
         <View style={styles.inputContainer}>
           <TextInput placeholderTextColor={'#fff'} style={styles.input} onChangeText={(keyword) => this.setState({ keyword })} placeholder='Search by city...' />
         </View>
-        <View style={styles.sectionContainer}>
+        <View>
           <TouchableHighlight style={styles.button} onPress={this.handlePress}>
             <Text style={styles.buttonText}>Search</Text>
           </TouchableHighlight>
         </View>
       </View>
-    );
+    ); 
   }
 }
 
@@ -81,13 +82,13 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20
   },
-  sectionContainer: {
-    width: 100,
-    height: 50
-  },
+  form: {
+    flex: 1,
+    justifyContent: 'space-between'
+  }, 
   logo: {
-    width: 100,
-    height: 100
+    width: 150,
+    height: 150
   },
   inputContainer: {
     borderBottomWidth: 1,

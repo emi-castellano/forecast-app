@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 
-import { FORECAST_FETCH } from '../actions/types'
+import { FORECAST_FETCH, ADD_FAV, REMOVE_FAV } from '../actions/types'
 
 class CityWeathersScreen extends React.Component {
     static navigationOptions = {
@@ -21,7 +21,7 @@ class CityWeathersScreen extends React.Component {
             city: param,
             isLoading: true,
             data: {},
-            isInFav: (this.props.favState.favorites.find((item) => item === param)) !== undefined ? true : false
+            //isInFav: (this.props.favState.favorites.find((item) => item === param)) !== undefined ? true : false
         }
     }
 
@@ -31,11 +31,10 @@ class CityWeathersScreen extends React.Component {
 
     favoriteAction = (action) => {
         if (action === 'add') {
-            this.addFavorite(this.state.city);
-            this.setState({ isInFav: true })
+            this.props.addFavorite(this.state.city)
         } else {
-            this.removeFav(this.state.city);
-            this.setState({ isInFav: false })
+            //this.removeFav(this.state.city);
+            //this.setState({ isInFav: false })
         }
     }
 
@@ -80,6 +79,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onFetchForecast: async (city) => {
             return dispatch({ type: FORECAST_FETCH, payload: city })
+        },
+        addFavorite: async (city) => {
+            return dispatch({ type: ADD_FAV, payload: city })
         }
     }
 }

@@ -1,9 +1,9 @@
-import { takeLatest, put, call, fork } from 'redux-saga/effects';
+import { takeLatest, put, call, fork } from 'redux-saga/effects'
 import { FORECAST_FETCH, FORECAST_FETCH_SUCCESS, FORECAST_FETCH_ERROR } from '../actions/types'
 
-function getWeatherByCity(city) {
+async function getWeatherByCity(city) {
   let url = 'http://api.openweathermap.org/data/2.5/forecast?q=' + city + '&units=metric&appid=196c9e25707aa971ca65dda7965cd2df';
-  return fetch(url).then(response => response.json())
+  return await fetch(url).then(response => response.json())
 }
 
 export function* getForecastData(payload) {
