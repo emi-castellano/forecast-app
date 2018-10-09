@@ -21,6 +21,19 @@ async function authApiCall(action, data) {
                     method: 'POST',
                     body: JSON.stringify({
                         username: data.username,
+                        password: data.password
+                    }),
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(response => response.json())
+        } else if (action === SIGN_UP_REQUEST) {
+            let url = `http://${LOCAL_IP}:8080/sign-up`
+        
+            return await fetch(url,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: data.username,
                         password: data.password,
                         email: data.email,
                         fullname: data.fullname
@@ -28,20 +41,19 @@ async function authApiCall(action, data) {
                     headers: { "Content-Type": "application/json" }
                 })
                 .then(response => response.json())
-        } else {
-            
         }
     } catch (err) {
         console.log(err)
     }
 }
 
+// SIGN IN 
 export function* userSignIn(payload) {
     try {
         if (payload) {
             const apiResponse = yield call(authApiCall, SIGN_IN_REQUEST, payload.payload)
             if (apiResponse.token) {
-                yield AsyncStorage.setItem('token', apiResponse.token )
+                yield AsyncStorage.setItem('token', apiResponse.token)
                 yield put({ type: SIGN_IN_SUCCESS, payload: true })
             } else {
                 yield put({ type: SIGN_IN_ERROR, payload: false })
@@ -53,6 +65,30 @@ export function* userSignIn(payload) {
 }
 
 export function* signInWatcher() {
-    const { payload } = yield takeLatest(SIGN_IN_REQUEST, userSignIn);
+    const { payload } = yield takeLatest(SIGN_IN_REQUEST, userSignIn)
     yield fork(userSignIn, payload)
+}
+
+// SIGN UP
+
+export function* userSignUp(payload) {
+    try {
+        if (payload) {
+            const apiResponse = yield call(authApiCall, SIGN_UP_REQUEST, payload.payload)
+
+            if (apiResponse.token) {
+                yield AsyncStorage.setItem('token', apiResponse.token )
+                yield put({ type: SIGN_UP_SUCCESS, payload: true })
+            } else {
+                yield put({ type: SIGN_UP_ERROR, payload: false })
+            }
+        }
+    } catch (err) {
+        yield put({ type: SIGN_UP_ERROR, payload: 'error' })
+    } 
+}
+
+export function* signUpWatcher() {
+    const { payload } = yield takeLatest(SIGN_UP_REQUEST, userSignUp)
+    yield fork(userSignUp, payload)
 }

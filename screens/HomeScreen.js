@@ -5,13 +5,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
-  NetInfo
+  NetInfo,
+  TouchableHighlight
 } from 'react-native';
 
 import PropTypes from 'prop-types';
+import { windowWidth } from '../constants/Layout'
+import { defaultColor, whiteColor } from '../constants/Colors'
 
-export default class HomeScreen extends React.Component {
+ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -33,7 +35,7 @@ export default class HomeScreen extends React.Component {
   };
 
   handleConnectivityChange = (isConnected) => {
-    console.log(isConnected)
+    //console.log(isConnected)
   }
 
   componentDidMount() {
@@ -45,18 +47,20 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.sectionContainer}>
           <Image
-            source={require('../assets/images/logo.png')}
+            source={require('../assets/images/icon.png')}
             style={styles.logo}
           />
         </View>
         <View>
-          <Text>This app will allow you to see the forecast for a specific city. Enjoy it.</Text>
+          <Text style={styles.text}>This app will allow you to see the forecast for a specific city. Enjoy it.</Text>
         </View>
-        <View>
-          <TextInput style={styles.input} onChangeText={(keyword) => this.setState({ keyword })} placeholder='Search by city...' />
+        <View style={styles.inputContainer}>
+          <TextInput placeholderTextColor={'#fff'} style={styles.input} onChangeText={(keyword) => this.setState({ keyword })} placeholder='Search by city...' />
         </View>
         <View style={styles.sectionContainer}>
-          <Button style={styles.button} onPress={() => { this.handlePress() }} title='Search' />
+          <TouchableHighlight style={styles.button} onPress={this.handlePress}>
+            <Text style={styles.buttonText}>Search</Text>
+          </TouchableHighlight>
         </View>
       </View>
     );
@@ -73,7 +77,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor: '#fff'
+    backgroundColor: defaultColor,
+    paddingLeft: 20,
+    paddingRight: 20
   },
   sectionContainer: {
     width: 100,
@@ -83,14 +89,29 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100
   },
+  inputContainer: {
+    borderBottomWidth: 1,
+    borderColor: whiteColor
+  },
   input: {
     fontSize: 20,
-    width: 200,
-    paddingBottom: 10
+    width: windowWidth - 40,
+    paddingBottom: 10,
+    color: whiteColor
+  },
+  text: {
+    color: whiteColor,
+    fontSize: 18
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10
+    //justifyContent: 'center',
+    backgroundColor: whiteColor,
+    width: 200,
+    padding: 10,
+    borderRadius: 50
+  },
+  buttonText: {
+    fontSize: 20
   }
 });

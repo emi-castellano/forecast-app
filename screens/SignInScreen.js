@@ -4,22 +4,22 @@ import {
   StyleSheet,
   Text,
   View,
-  Button
+  TouchableHighlight
 } from 'react-native';
-
-import { LOCAL_IP } from 'react-native-dotenv'
 
 import {
   SIGN_IN_REQUEST
 } from '../actions/types'
 
 import { connect } from 'react-redux'
+import { defaultColor, whiteColor } from '../constants/Colors'
+import { windowWidth, windowHeight } from '../constants/Layout'
 
 import PropTypes from 'prop-types';
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
-    title: 'Sign In'
+    title: null
   };
 
   constructor(props) {
@@ -45,13 +45,15 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Sign In</Text>
+        <Text style={styles.title}>Please, log in first:</Text>
         <View>
-          <TextInput style={styles.input} onChangeText={(username) => this.setState({ username })} placeholder='Username' />
-          <TextInput style={styles.input} onChangeText={(password) => this.setState({ password })} placeholder='Password' />
+          <TextInput placeholderTextColor={whiteColor} style={styles.input} onChangeText={(username) => this.setState({ username })} placeholder='Username' />
+          <TextInput placeholderTextColor={whiteColor} style={styles.input} onChangeText={(password) => this.setState({ password })} placeholder='Password' />
         </View>
-        <Button title="Sign In" onPress={() => { this.signInPress() }}></Button>
-        <Text onPress={() => { this.props.navigation.navigate('SignUp') }}>Sign Up</Text>
+        <TouchableHighlight style={styles.signInButton} onPress={this.signInPress}>
+          <Text style={styles.signInButtonText}>Sign In</Text>
+        </TouchableHighlight>
+        <Text style={styles.haveAccount} onPress={() => { this.props.navigation.navigate('SignUp') }}>Already have an account.</Text>
       </View>
     );
   }
@@ -79,15 +81,41 @@ SignInScreen.propTypes = {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 40,
+    paddingLeft: 20,
+    paddingRight: 20,
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
-    backgroundColor: '#fff'
+    backgroundColor: defaultColor
+  },
+  title: {
+    marginBottom: 30,
+    fontSize: 20,
+    color: whiteColor
+  },  
+  signInButton: {
+    alignItems: 'center',
+    //justifyContent: 'center',
+    backgroundColor: whiteColor,
+    width: 200,
+    padding: 10,
+    borderRadius: 50
+  },
+  signInButtonText: {
+    fontSize: 20
   },
   input: {
     fontSize: 20,
-    width: 200,
-    paddingBottom: 10
+    width: windowWidth - 30,
+    marginBottom: 30,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: whiteColor
+  },
+  haveAccount: {
+    color: whiteColor,
+    marginTop: 30,
+    fontSize: 17
   }
 });

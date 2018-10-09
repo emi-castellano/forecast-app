@@ -12,8 +12,14 @@ export default class AuthCheckScreen extends React.Component {
     }
 
     _bootstrapAsync = async () => {
-        const userToken = await AsyncStorage.getItem('userToken');
-        this.props.navigation.navigate(userToken ? 'SignedIn' : 'SignedOut');
+        try {
+            //const userToken = await AsyncStorage.getItem('token')
+            const userToken = false
+            this.props.navigation.navigate(userToken ? 'SignedIn' : 'SignedOut')
+        } catch (err) {
+            this.props.navigation.navigate('SignedOut')
+            console.log(err)
+        }
     };
 
     // Render any loading content that you like here

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, Button, Text, Dimensions, Picker } from 'react-native';
+import { StyleSheet, View, ScrollView, Button, Text, showActionSheetWithOptions, Picker } from 'react-native';
 import { Grid, LineChart, XAxis, YAxis } from 'react-native-svg-charts';
 import PropTypes from 'prop-types';
 
@@ -28,13 +28,10 @@ export default class WeatherChart extends React.Component {
                     return this.state.dataTempFahrenheit
                 }
                 return this.state.dataTempCelsius
-                break;
             case 'HUMIDITY':
                 return this.state.dataHum
-                break;
             case 'PRESSURE':
                 return this.state.dataPress
-                break;
         }
     }
 
@@ -125,10 +122,10 @@ const styles = StyleSheet.create({
     axis: {
         marginBottom: 10
     },
-    picker: {
+    /*picker: {
         width: 150,
         height: 50
-    },
+    },*/
     buttonsContainer: {
         marginTop: 10,
         marginBottom: 15,
