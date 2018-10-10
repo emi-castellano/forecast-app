@@ -9,37 +9,21 @@ import AuthCheckScreen from '../screens/AuthCheckScreen'
 
 import { Icon } from 'expo'
 
-const SignedInStack = createStackNavigator({ Home: HomeScreen, Forecast: CityWeathersScreen })
 const SignedInTab = createBottomTabNavigator(
   {
     Home: HomeScreen,
     Favorites: FavoritesScreen
-  },
-  /*{
-    navigationOptions: {
-      tabBarIcon: ({ focused }) => (
-        <Icon.Ionicos
-          focused={focused}
-          name={
-            Platform.OS === 'ios'
-              ? 'ios-home'
-              : 'md-home'
-          }
-        />
-      )
-    }
-  }*/
+  }
 )
-const SignedOutStack = createStackNavigator({ SignIn: SignInScreen, SignUp: SignUpScreen })
-
+const PublicStack = createStackNavigator({ SignIn: SignInScreen, SignUp: SignUpScreen })
+const PrivateStack = createStackNavigator({ Tab: SignedInTab, Forecast: CityWeathersScreen })
+    
 export default createSwitchNavigator(
   {
-    AuthCheck: AuthCheckScreen,
-    SignedIn: SignedInStack,
-    SignedOut: SignedOutStack,
-    SignedInTab
+    PrivateStack,
+    PublicStack
   },
   {
-    initialRouteName: 'AuthCheck',
+    initialRouteName: 'PublicStack',
   }
 );

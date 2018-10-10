@@ -31,7 +31,7 @@ class FavoritesScreen extends React.Component {
               data={this.props.favState.favorites}
               keyExtractor={(item) => item}
               renderItem={({ item, index }) => {
-                return <ListItem goToFav={() => {this.props.navigation.navigate('WeatherScreen', { city: item })}} index={index} city={item}></ListItem>
+                return <ListItem goToFav={() => {this.props.navigation.navigate('Forecast', { city: item })}} index={index} city={item}></ListItem>
               }}
             >
             </FlatList>

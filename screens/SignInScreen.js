@@ -4,7 +4,9 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native';
 
 import {
@@ -13,7 +15,7 @@ import {
 
 import { connect } from 'react-redux'
 import { defaultColor, whiteColor } from '../constants/Colors'
-import { windowWidth, windowHeight } from '../constants/Layout'
+import { windowWidth } from '../constants/Layout'
 
 import PropTypes from 'prop-types';
 
@@ -27,35 +29,61 @@ class SignInScreen extends React.Component {
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      signInCheck: false
     }
   }
 
   signInPress = () => {
-    this.props.onSignIn(this.state)
+    const { username, password } = this.state
+    this.props.onSignIn({ username, password })
+  }
+
+  signInCheck = async () => {
+    try {
+        const userToken = await AsyncStorage.getItem('token')
+        
+        if (userToken) {
+          this.props.navigation.navigate('PrivateStack')
+        } else {
+          this.setState({ signInCheck: true })
+        }
+    } catch (err) {
+        this.props.navigation.navigate('SignedOut')
+        console.log(err)
+    }
+  }
+
+  componentDidMount () {
+    this.signInCheck()
   }
 
   componentDidUpdate (prevPros, prevState) {
-  
     if (this.props.authState.authenticated) {
-      this.props.navigation.navigate('SignedIn');
+      this.props.navigation.navigate('PrivateStack');
     }
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Please, log in first:</Text>
-        <View>
-          <TextInput placeholderTextColor={whiteColor} style={styles.input} onChangeText={(username) => this.setState({ username })} placeholder='Username' />
-          <TextInput placeholderTextColor={whiteColor} style={styles.input} onChangeText={(password) => this.setState({ password })} placeholder='Password' />
+    if (this.state.signInCheck) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.title}>Please, log in first:</Text>
+          <View>
+            <TextInput placeholderTextColor={whiteColor} style={styles.input} onChangeText={(username) => this.setState({ username })} placeholder='Username' />
+            <TextInput placeholderTextColor={whiteColor} style={styles.input} onChangeText={(password) => this.setState({ password })} placeholder='Password' />
+          </View>
+          <TouchableHighlight style={styles.signInButton} onPress={this.signInPress}>
+            <Text style={styles.signInButtonText}>Sign In</Text>
+          </TouchableHighlight>
+          <Text style={styles.haveAccount} onPress={() => { this.props.navigation.navigate('SignUp') }}>Already have an account.</Text>
         </View>
-        <TouchableHighlight style={styles.signInButton} onPress={this.signInPress}>
-          <Text style={styles.signInButtonText}>Sign In</Text>
-        </TouchableHighlight>
-        <Text style={styles.haveAccount} onPress={() => { this.props.navigation.navigate('SignUp') }}>Already have an account.</Text>
-      </View>
-    );
+      )
+    } else {
+      return (
+        <ActivityIndicator/>
+      )
+    }
   }
 }
 
