@@ -62,7 +62,7 @@ import { defaultColor, whiteColor } from '../constants/Colors'
           <TouchableHighlight style={styles.button} onPress={this.handlePress}>
             <Text style={styles.buttonText}>Search</Text>
           </TouchableHighlight>
-        </View>
+        </View> 
       </View>
     ); 
   }
@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: whiteColor,
-    fontSize: 18
+    fontSize: 18,
+    textAlign: 'center'
   },
   button: {
     alignItems: 'center',
